@@ -5,22 +5,13 @@ import Title from './components/Title'
 import QuoteList from './components/QuoteList'
 
 
-const initialQuote = [
-  {
-    quote: "I live in a single room above a bowling alley...and below another bowling alley.",
-    character: "Frank Grimes",
-    image: "https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FFrankGrimes.png?1497567511887",
-    characterDirection: "Left"
-  }
-];
-
 const title = 'Simpsons Quotes';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quotes: initialQuote
+      quotes: null
     }
 
     this.getData = this.getData.bind(this)
@@ -32,18 +23,27 @@ class App extends Component {
       .then(res => res.data)
       .then(data => {
         console.log(data)
-        this.setState({ quotes: data })
+        this.setState({ quotes: data });
       })
+  }
+
+  componentDidMount() {
+    this.getData()
   }
 
 
   render() {
+    const quotes = this.state.quotes;
     return (
-      <div className="App">
+      <div className="App" >
         <Title title={title} />
-        <QuoteList quotes={this.state.quotes} />
+        { quotes ? (
+          <QuoteList quotes={quotes} />
+        ) : (
+            <span class='loading'>Loading.......</span>
+          )}
         <button onClick={this.getData}>New Quote</button>
-      </div>
+      </div >
     );
   }
 }
